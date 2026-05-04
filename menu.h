@@ -25,3 +25,5 @@ void rabin_karp_menu();
 void comparison_menu();
 void primality_testing_menu(int method);
 void primality_comparison_menu();
+void print_quicksort_steps();
+void print_rabin_karp_steps();

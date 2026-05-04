@@ -3,6 +3,7 @@
 **Author:** Lianet Caldero
 **Professor:** Ali
 
+**AI Assistance:** Used for generating this README.md file, function definition comments and parameter descriptions in source files.
 ---
 
 ## Project Description

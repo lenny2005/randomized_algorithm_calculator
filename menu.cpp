@@ -3,6 +3,8 @@
 //Professor: Ali
 //Assignment: Programming Project
 //menu.cpp
+// AI Usage: ai was used in the generation of comments about function definitions and their parameters.
+
 #include "includes.h"
 #include "las_vegas.h"
 #include "rabin_karp.h"
@@ -28,12 +30,11 @@ void print_quicksort_summary() {
 }
 
 // Displays detailed step-by-step explanation of Random Quick Sort algorithm.
-// Explains the partitioning process, recursion, and randomization strategy.
 // Parameters: none
 // Returns: void (prints to console)
 void print_quicksort_steps() {
     cout << "\nSteps for Random Quick Sort (Las Vegas):" << endl;
-    cout << "  1. If the array has 0 or 1 element, it is already sorted return." << endl;
+    cout << "  1. If the array has 0 or 1 element, it is already sorted – return." << endl;
     cout << "  2. Pick a random pivot element from the current subarray." << endl;
     cout << "  3. Partition: move all elements less than the pivot to its left," << endl;
     cout << "     and all elements greater than the pivot to its right." << endl;
@@ -46,67 +47,68 @@ void print_quicksort_steps() {
     cout << "  - Randomising the pivot avoids worst-case O(n^2) on sorted input." << endl;
 }
 
-// Displays the time and space complexity analysis of Las Vegas Primality Testing algorithm.
+// Displays the time and space complexity analysis of Las Vegas Primality Testing (randomised trial division).
 // Parameters: none
 // Returns: void (prints to console)
 void print_lv_primality_complexity() {
-    cout << "\n[Las Vegas Primality - Miller-Rabin]" << endl;
-    cout << "  Time:  O(k log^2 n) | k = variable rounds" << endl;
-    cout << "  Space: O(1)" << endl;
+    cout << "\n[Las Vegas Primality - Randomised Trial Division]" << endl;
+    cout << "  Time:  O(?n) worst-case (prime) | O(1) best-case (small divisor found early)" << endl;
+    cout << "  Space: O(?n) for divisor list" << endl;
 }
 
 // Displays a summary and use-case recommendation for Las Vegas Primality Testing.
 // Parameters: none
 // Returns: void (prints to console)
 void print_lv_primality_summary() {
-    cout << "\nSummary: Las Vegas Primality (Miller-Rabin)" << endl;
-    cout << "- Always correct, but runtime can vary depending on witnesses." << endl;
-    cout << "- Used when you need guaranteed correctness for primality." << endl;
+    cout << "\nSummary: Las Vegas Primality (Randomised Trial Division)" << endl;
+    cout << "- Always correct, but runtime varies randomly depending on order of divisors." << endl;
+    cout << "- For composite numbers, may finish quickly if a small divisor is found early." << endl;
+    cout << "- For primes, must test all odd numbers up to ?n." << endl;
+    cout << "- Used when guaranteed correctness is required and n is small to moderate." << endl;
 }
 
-// Displays the time and space complexity analysis of Rabin-Karp string matching algorithm.
+// Displays the time and space complexity analysis of Rabin-Karp (Monte Carlo) string matching.
 // Parameters: none
 // Returns: void (prints to console)
 void print_rabin_karp_complexity() {
     cout << "\n[Rabin-Karp - Monte Carlo]" << endl;
-    cout << "  Time:  O(n+m) avg | O(nm) worst (hash collisions)" << endl;
+    cout << "  Time:  O(n+m) expected | O(nm) worst (many hash collisions)" << endl;
     cout << "  Space: O(1)" << endl;
 }
 
-// Displays a summary and use-case recommendation for Rabin-Karp string matching.
+// Displays a summary and use-case recommendation for Monte Carlo Rabin-Karp.
 // Parameters: none
 // Returns: void (prints to console)
 void print_rabin_karp_summary() {
-    cout << "  -> Use Rabin-Karp for fast pattern search with acceptable error rate." << endl;
+    cout << "  -> Use Monte Carlo Rabin-Karp for fast pattern search when a small" << endl;
+    cout << "     probability of false positives is acceptable." << endl;
 }
 
-// Displays detailed step-by-step explanation of Rabin-Karp string matching algorithm.
-// Explains rolling hash calculation, window sliding, and verification process.
+// Displays detailed step-by-step explanation of Monte Carlo Rabin-Karp (no verification).
 // Parameters: none
 // Returns: void (prints to console)
 void print_rabin_karp_steps() {
-    cout << "\nSteps for Rabin-Karp String Matching (Monte Carlo):" << endl;
+    cout << "\nSteps for Rabin-Karp String Matching (Monte Carlo – no verification):" << endl;
     cout << "  1. Compute a rolling hash of the pattern (length m)." << endl;
     cout << "  2. Compute the hash of the first m characters of the text." << endl;
     cout << "  3. Slide a window of size m across the text, one character at a time:" << endl;
-    cout << "       a. If the window hash matches the pattern hash:" << endl;
-    cout << "            - Verify character by character to confirm a true match." << endl;
-    cout << "            - If confirmed, record the position." << endl;
+    cout << "       a. If the window hash matches the pattern hash, record this position as a match." << endl;
+    cout << "            - No character-by-character verification is performed." << endl;
+    cout << "            - False positives may occur due to hash collisions." << endl;
     cout << "       b. Remove the leftmost character from the hash (subtract its contribution)." << endl;
     cout << "       c. Add the next character to the hash (rolling update)." << endl;
-    cout << "  4. Report all positions where a true match was found." << endl;
+    cout << "  4. Report all positions where the hash matched." << endl;
     cout << "\nComparisons performed:" << endl;
     cout << "  - Hash comparison at each window position: O(1) per step." << endl;
-    cout << "  - Character-by-character verification only on hash matches." << endl;
-    cout << "  - Hash collisions are false positives — verification prevents false results." << endl;
+    cout << "  - No character comparisons after a hash match (pure Monte Carlo)." << endl;
 }
 
-// Displays the time and space complexity analysis of Monte Carlo Primality Testing algorithm.
+// Displays the time and space complexity analysis of Monte Carlo Primality Testing (Miller-Rabin).
 // Parameters: none
 // Returns: void (prints to console)
 void print_mc_primality_complexity() {
     cout << "\n[Monte Carlo Primality - Miller-Rabin]" << endl;
-    cout << "  Time:  O(k log^2 n) | k = fixed rounds" << endl;
+    cout << "  Time:  O(k log^2 n) | k = fixed rounds (e.g., 20)" << endl;
     cout << "  Space: O(1)" << endl;
 }
 
@@ -115,10 +117,10 @@ void print_mc_primality_complexity() {
 // Returns: void (prints to console)
 void print_mc_primality_summary() {
     cout << "  -> Use Monte Carlo when speed matters more than absolute certainty." << endl;
+    cout << "     Error probability ? 4^(-k) (e.g., for k=20, error < 2^(-40))." << endl;
 }
 
-// Displays detailed step-by-step explanation of Monte Carlo Primality Testing algorithm.
-// Explains the fixed k-rounds of witness testing and error probability bounds.
+// Displays detailed step-by-step explanation of Monte Carlo Primality Testing (Miller-Rabin).
 // Parameters: none
 // Returns: void (prints to console)
 void print_monte_carlo_primality_steps() {
@@ -132,10 +134,9 @@ void print_monte_carlo_primality_steps() {
     cout << "       c. If x == 1 or x == n-1, this round passes — continue." << endl;
     cout << "       d. Repeat up to r-1 times: x = x^2 mod n." << endl;
     cout << "            - If x == n-1, this round passes — break inner loop." << endl;
-    cout << "            - If x == 1, n is composite — return false immediately." << endl;
     cout << "       e. If no squaring produced n-1, n is composite — return false." << endl;
     cout << "  5. After all k rounds pass, return probably prime." << endl;
-    cout << "     Error probability is at most 4^(-k)." << endl;
+    cout << "     Error probability ? 4^(-k)." << endl;
     cout << "\nComparisons performed in each round:" << endl;
     cout << "  - x == 1?   (initial modular exponentiation result)" << endl;
     cout << "  - x == n-1? (before and after each squaring step)" << endl;
@@ -146,9 +147,8 @@ void print_monte_carlo_primality_steps() {
 // Returns: void (prints to console)
 void print_sort_vs_rk_comparison() {
     cout << "\n[Quick Sort vs Rabin-Karp]" << endl;
-    cout << "  Quick Sort:  sorts data    | Las Vegas   | O(n log n) avg" << endl;
-    cout << "  Rabin-Karp:  finds pattern | Monte Carlo | O(n+m) avg" << endl;
-    cout << "  Both always return correct results." << endl;
+    cout << "  Quick Sort:  sorts data    | Las Vegas   | O(n log n) avg, always correct" << endl;
+    cout << "  Rabin-Karp:  finds pattern | Monte Carlo | O(n+m) avg, may have false positives" << endl;
 }
 
 // Displays a comparison of Las Vegas and Monte Carlo primality testing characteristics.
@@ -156,27 +156,29 @@ void print_sort_vs_rk_comparison() {
 // Returns: void (prints to console)
 void print_lv_vs_mc_primality_comparison() {
     cout << "\n[Las Vegas vs Monte Carlo Primality]" << endl;
-    cout << "  Las Vegas:   always correct  | runtime varies" << endl;
-    cout << "  Monte Carlo: fixed runtime   | error prob <= 4^(-k)" << endl;
-    cout << "  Both use Miller-Rabin witness testing." << endl;
+    cout << "  Las Vegas:   always correct          | runtime varies (randomised trial division)" << endl;
+    cout << "  Monte Carlo: fixed runtime           | error probability ? 4^(-k)" << endl;
+    cout << "  Las Vegas uses trial division; Monte Carlo uses Miller-Rabin." << endl;
 }
 
-// Displays menu for Quick Sort operations with options to view algorithm steps or sort a string.
-// Allows user to repeatedly perform sorting operations until choosing to exit.
+// Displays menu for Quick Sort operations.
 // Parameters: none
 // Returns: void (displays menu and handles user interactions)
 void rabin_karp_menu_quick_sort()
 {
     while (true) {
-        cout << "\n(1) See algorithm steps  (2) Sort a string: ";
+        cout << "\n(1) See algorithm steps  (2) Sort a string (3) Return to main menu: ";
         string option;
         getline(cin, option);
-        while (option != "1" && option != "2") {
-            cout << "Invalid choice. Enter 1 or 2: ";
+        while (option != "1" && option != "2" && option != "3") {
+            cout << "Invalid choice. Enter 1, 2, or 3: ";
             getline(cin, option);
         }
         if (option == "1") {
             print_quicksort_steps();
+        }
+		if (option == "3") {
+            break;
         }
         else {
             string input = get_valid_string_input();
@@ -193,72 +195,78 @@ void rabin_karp_menu_quick_sort()
     }
 }
 
-// Displays primality testing menu and allows user to test numbers for primality.
-// Supports both Las Vegas and Monte Carlo methods based on the method parameter.
-// Provides options to view algorithm details or test a number.
-// Parameters: method - 1 for Las Vegas, 2 for Monte Carlo
+// Displays primality testing menu and allows user to test numbers.
+// Parameters: method - 1 for Las Vegas (randomised trial division), 2 for Monte Carlo (Miller-Rabin)
 // Returns: void (displays menu and handles user interactions)
 void primality_testing_menu(int method)
 {
     while (true) {
-        cout << "\nEnter a number to test for primality (or 0 to return): ";
+        if (method == 1) {
+            cout << "\n--- Las Vegas Primality Testing (Randomised Trial Division) ---" << endl;
+        }
+        else {
+            cout << "\n--- Monte Carlo Primality Testing (Miller-Rabin) ---" << endl;
+        }
+        cout << "(1) See algorithm steps  (2) Test a number  (3) Return to main menu: ";
+        string option;
+        getline(cin, option);
+        while (option != "1" && option != "2" && option != "3") {
+            cout << "Invalid choice. Enter 1, 2, or 3: ";
+            getline(cin, option);
+        }
+
+        if (option == "1") {
+            if (method == 1) {
+                cout << "\nSteps for Las Vegas Primality Testing (Randomised Trial Division):" << endl;
+                cout << "  1. If n <= 1, return false (composite). If n == 2 or 3, return true (prime)." << endl;
+                cout << "  2. If n is even, return false (composite)." << endl;
+                cout << "  3. Generate a list of all odd numbers from 3 up to ?n (potential divisors)." << endl;
+                cout << "  4. Randomly shuffle the list (random order of checking)." << endl;
+                cout << "  5. For each divisor d in the shuffled list:" << endl;
+                cout << "       - If n % d == 0, return false (composite) immediately." << endl;
+                cout << "  6. If no divisor divides n, return true (prime)." << endl;
+                cout << "\nKey property: Always correct. Runtime varies because the order of divisors is random." << endl;
+                cout << "  - Composite numbers may finish early if a small divisor is found early." << endl;
+                cout << "  - Prime numbers must check all divisors up to ?n." << endl;
+            }
+            else {
+                print_monte_carlo_primality_steps();
+            }
+            continue;
+        }
+        else if (option == "3") {
+            break;
+        }
+
+        cout << "\nEnter a number to test for primality: ";
         string num_input;
         getline(cin, num_input);
 
-        if (num_input == "0") break;
-
-        if (!all_of(num_input.begin(), num_input.end(), ::isdigit)) {
-            cout << "Invalid input. Please enter a valid number." << endl;
+        if (num_input.empty() || !all_of(num_input.begin(), num_input.end(), ::isdigit)) {
+            cout << "Invalid input. Please enter a positive integer." << endl;
             continue;
         }
 
-        long long n = stoll(num_input);
+        long long n;
+        try {
+            n = stoll(num_input);
+            if (n == 0) {
+                cout << "Returning to previous menu." << endl;
+                break;
+            }
+        }
+        catch (...) {
+            cout << "Number too large. Please enter a smaller number." << endl;
+            continue;
+        }
+
         bool is_prime = false;
         auto start = high_resolution_clock::now();
 
         if (method == 1) {
-            cout << "\n--- Las Vegas Primality Testing ---" << endl;
-            cout << "(1) See algorithm  (2) Test a number: ";
-            string option;
-            getline(cin, option);
-            while (option != "1" && option != "2") {
-                cout << "Invalid choice. Enter 1 or 2: ";
-                getline(cin, option);
-            }
-
-            if (option == "1") {
-                cout << "\nSteps for Las Vegas Primality Testing:" << endl;
-                cout << "  1. Write n-1 as 2^r * d (factor out powers of 2)." << endl;
-                cout << "  2. Pick a random witness a in [2, n-2]." << endl;
-                cout << "  3. Compute x = a^d mod n." << endl;
-                cout << "  4. If x == 1 or x == n-1, n passes this round (likely prime for this witness)." << endl;
-                cout << "  5. Otherwise, repeat up to r-1 times: x = x^2 mod n; if x == n-1, n passes this round." << endl;
-                cout << "  6. If x never becomes n-1, n is composite (definitely not prime)." << endl;
-                cout << "  7. Repeat with new random witnesses until a definitive answer is found." << endl;
-                cout << "  8. If no witness proves composite after many rounds, n is declared prime." << endl;
-                cout << "\nComparisons performed in each round:" << endl;
-                cout << "  - x == 1? (Is the initial power congruent to 1 mod n)" << endl;
-                cout << "  - x == n-1? (Is the initial or any squared value congruent to n-1 mod n)" << endl;
-                cout << "  - If neither, n is composite for this witness." << endl;
-                continue;
-            }
-            else {
-                is_prime = las_vegas_primality(n);
-            }
+            is_prime = las_vegas_primality(n);
         }
         else {
-            cout << "\n--- Monte Carlo Primality Testing ---" << endl;
-            cout << "(1) See algorithm  (2) Test a number: ";
-            string option;
-            getline(cin, option);
-            while (option != "1" && option != "2") {
-                cout << "Invalid choice. Enter 1 or 2: ";
-                getline(cin, option);
-            }
-            if (option == "1") {
-                print_monte_carlo_primality_steps();
-                continue;
-            }
             is_prime = monte_carlo_primality(n, 20);
         }
 
@@ -276,23 +284,6 @@ void primality_testing_menu(int method)
         if (method == 1) {
             print_lv_primality_complexity();
             print_lv_primality_summary();
-            while (true) {
-                cout << "\nOptions: (1) See steps  (2) Test another  (3) Go back\nChoose: ";
-                string opt;
-                getline(cin, opt);
-                if (opt == "1") {
-                    las_vegas_primality(n);
-                }
-                else if (opt == "2") {
-                    break;
-                }
-                else if (opt == "3") {
-                    return;
-                }
-                else {
-                    cout << "Invalid option. Please enter 1, 2, or 3." << endl;
-                }
-            }
         }
         else {
             print_mc_primality_complexity();
@@ -301,23 +292,24 @@ void primality_testing_menu(int method)
     }
 }
 
-// Displays menu for Rabin-Karp string matching operations.
-// Allows user to view algorithm steps or search for patterns in text.
-// Provides repeated operation capability until user chooses to exit.
+// Displays menu for Rabin-Karp (Monte Carlo) string matching operations.
 // Parameters: none
 // Returns: void (displays menu and handles user interactions)
 void rabin_karp_menu()
 {
     while (true) {
-        cout << "\n(1) See algorithm steps  (2) Search for a pattern: ";
+        cout << "\n(1) See algorithm steps  (2) Search for a pattern (3) Return to main menu: ";
         string option;
         getline(cin, option);
-        while (option != "1" && option != "2") {
-            cout << "Invalid choice. Enter 1 or 2: ";
+        while (option != "1" && option != "2" && option != "3") {
+            cout << "Invalid choice. Enter 1, 2, or 3: ";
             getline(cin, option);
         }
         if (option == "1") {
             print_rabin_karp_steps();
+        }
+		if (option == "3") {
+            break;
         }
         else {
             string text = get_valid_text_input();
@@ -335,11 +327,9 @@ void rabin_karp_menu()
     }
 }
 
-// Displays the main menu for the Randomized Algorithm Calculator application.
-// Provides access to Las Vegas algorithms, Monte Carlo algorithms, and comparison tools.
-// Handles user selection and routes to appropriate submenus until exit.
+// Displays the main menu and coordinates all functionality.
 // Parameters: none
-// Returns: void (displays menu and coordinates navigation)
+// Returns: void (displays menu and handles user selection until exit)
 void main_menu()
 {
     srand(static_cast<unsigned int>(time(0)));

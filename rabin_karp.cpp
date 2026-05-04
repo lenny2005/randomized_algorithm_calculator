@@ -3,24 +3,37 @@
 //Professor: Ali
 //Assignment: Programming Project
 //rabin_karp.cpp
+// AI Usage: ai was used in the generation of comments about function definitions and their parameters.
+
+//This file contains the implementation of the Monte Carlo Rabin-Karp string matching algorithm.
+//Uses a rolling hash without character verification. May produce false positives.
+
 #include "includes.h"
 
 const long long BASE = 256;
 const long long MOD = 101;
 
-string normalize_string_rk(const string& input, bool keep_spaces = false)
+
+// Normalizes a string by filtering out non-alphabetic characters.
+// Parameters: input - the string to normalize, keep_spaces - whether to preserve spaces
+// Returns: the normalized string containing only letters (and spaces if requested)
+string normalize_string_rk(const string& input, bool keep_spaces)
 {
     string result;
     for (char c : input) {
         if (isalpha(static_cast<unsigned char>(c))) {
             result += c;
-        } else if (keep_spaces && c == ' ') {
+        }
+        else if (keep_spaces && c == ' ') {
             result += ' ';
         }
     }
     return result;
 }
 
+// Searches for all occurrences of a pattern in text using Monte Carlo Rabin-Karp.
+// Parameters: text - the string to search in, pattern - the string to search for
+// Returns: a vector of starting positions where the pattern hash matches (may include false positives)
 vector<int> rabin_karp_search(const string& text, const string& pattern)
 {
     vector<int> matches;
@@ -35,35 +48,20 @@ vector<int> rabin_karp_search(const string& text, const string& pattern)
     long long text_hash = 0;
     long long h = 1;
 
-    // Calculate h = BASE^(m-1) % MOD
     for (size_t i = 0; i < m - 1; i++) {
         h = (h * BASE) % MOD;
     }
 
-    // Calculate hash for pattern and first window of text
     for (size_t i = 0; i < m; i++) {
         pattern_hash = (pattern_hash * BASE + pattern[i]) % MOD;
         text_hash = (text_hash * BASE + text[i]) % MOD;
     }
 
-    // Slide the pattern over text
     for (size_t i = 0; i <= n - m; i++) {
-        // Check if hashes match
         if (pattern_hash == text_hash) {
-            // Verify match (Monte Carlo: verify to ensure correctness)
-            bool match = true;
-            for (size_t j = 0; j < m; j++) {
-                if (text[i + j] != pattern[j]) {
-                    match = false;
-                    break;
-                }
-            }
-            if (match) {
-                matches.push_back(static_cast<int>(i));
-            }
+            matches.push_back(static_cast<int>(i));
         }
 
-        // Calculate hash for next window
         if (i < n - m) {
             text_hash = (BASE * (text_hash - text[i] * h) + text[i + m]) % MOD;
             if (text_hash < 0) {
@@ -75,6 +73,9 @@ vector<int> rabin_karp_search(const string& text, const string& pattern)
     return matches;
 }
 
+// Wrapper function for Monte Carlo search – normalises inputs and reports results.
+// Parameters: text - the text to search in, pattern - the pattern to search for
+// Returns: a formatted string showing pattern, text, match positions, and time taken
 string search_pattern(const string& text, const string& pattern)
 {
     string filtered_text = normalize_string_rk(text, false);
@@ -96,7 +97,8 @@ string search_pattern(const string& text, const string& pattern)
     result += "Text: " + filtered_text + "\n";
     if (matches.empty()) {
         result += "No matches found.\n";
-    } else {
+    }
+    else {
         result += "Matches found at positions: ";
         for (int pos : matches) {
             result += to_string(pos) + " ";
@@ -109,27 +111,38 @@ string search_pattern(const string& text, const string& pattern)
     return result;
 }
 
+// Prompts the user to enter a valid pattern string and validates the input.
+// Parameters: none
+// Returns: a non-empty string containing at least one letter
 string get_valid_pattern_input()
 {
     string input;
     cout << "Enter a pattern to search for (letters only, not empty): ";
     getline(cin, input);
-    while (input.empty()) {
-        cout << "Input cannot be empty. Please try again: ";
+    while (input.empty() || !has_letter(input)) {
+        if (input.empty())
+            cout << "Pattern cannot be empty. Please try again: ";
+        else
+            cout << "Pattern must contain at least one letter. Please try again: ";
         getline(cin, input);
     }
     return input;
 }
 
+// Prompts the user to enter a valid text string and validates the input.
+// Parameters: none
+// Returns: a non-empty string containing at least one letter
 string get_valid_text_input()
 {
     string input;
     cout << "Enter text to search in (letters and spaces only, not empty): ";
     getline(cin, input);
-    while (input.empty()) {
-        cout << "Input cannot be empty. Please try again: ";
+    while (input.empty() || !has_letter(input)) {
+        if (input.empty())
+            cout << "Text cannot be empty. Please try again: ";
+        else
+            cout << "Text must contain at least one letter. Please try again: ";
         getline(cin, input);
     }
     return input;
 }
-

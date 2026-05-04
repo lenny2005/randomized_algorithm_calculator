@@ -2,126 +2,177 @@
 //Course: Data Structures and Algorithms
 //Professor: Ali
 //Assignment: Programming Project
-//comparison.cpp
+//primality_comparison.cpp
+// AI Usage: ai was used in the generation of comments about function definitions and their parameters.
+
 #include "includes.h"
 #include "las_vegas.h"
-#include "rabin_karp.h"
+#include "monte_carlo.h"
+#include "primality_comparison.h"
+extern mt19937 gen;
 
-// Displays comparison menu and runs performance comparison between Quick Sort and Rabin-Karp algorithms.
-// Allows user to specify the number of iterations and test data for comparing algorithm performance.
-// Measures execution time and displays average timing and faster algorithm.
+// Prompts user with three options: see steps, run comparison, or return.
+// Runs both Las Vegas and Monte Carlo primality tests on the same random numbers.
 // Parameters: none
-// Returns: void (displays results to console)
+// Returns: void (displays comparison results to console)
 void comparison_menu()
 {
-    int k;
-    cout << "Enter number of iterations for comparison (k): ";
-    string k_input;
-    getline(cin, k_input);
-    while (k_input.empty() || !all_of(k_input.begin(), k_input.end(), ::isdigit) || stoi(k_input) <= 0) {
-        cout << "Invalid input. Enter a positive integer: ";
-        getline(cin, k_input);
-    }
-    k = stoi(k_input);
-
     while (true) {
-        cout << "\n========== Comparison Options ==========" << endl;
-        cout << "1. Compare Quick Sort vs Rabin-Karp" << endl;
-        cout << "2. Return to Main Menu" << endl;
-        cout << "========================================" << endl;
-        cout << "Choose an option (1 or 2): ";
+        cout << "(1) See algorithm steps (2) Compare Las Vegas vs Monte Carlo Primality (3) Return to Main Menu : " << endl;
         string choice;
         getline(cin, choice);
 
-        while (choice != "1" && choice != "2") {
-            cout << "Invalid choice. Enter 1 or 2: ";
+        while (choice != "1" && choice != "2" && choice != "3") {
+            cout << "Invalid choice. Enter 1, 2, or 3: ";
             getline(cin, choice);
         }
 
-        if (choice == "2") {
+        if (choice == "3") {
             break;
         }
 
         if (choice == "1") {
-            string test_input;
-            cout << "\nEnter test data (letters and spaces): ";
-            getline(cin, test_input);
-            while (test_input.empty()) {
-                cout << "Input cannot be empty. Please try again: ";
-                getline(cin, test_input);
-            }
+            cout << "\nAlgorithm Steps" << endl;
+            cout << "\nLas Vegas Primality Testing (Randomised Trial Division)" << endl;
+            cout << "Steps:" << endl;
+            cout << "  1. If n <= 1, return false (composite). If n == 2 or 3, return true (prime)." << endl;
+            cout << "  2. If n is even, return false (composite)." << endl;
+            cout << "  3. Generate a list of all odd numbers from 3 up to √n (potential divisors)." << endl;
+            cout << "  4. Randomly shuffle the list (random order of checking)." << endl;
+            cout << "  5. For each divisor d in the shuffled list:" << endl;
+            cout << "       - If n % d == 0, return false (composite) immediately." << endl;
+            cout << "  6. If no divisor divides n, return true (prime)." << endl;
+            cout << "\nMonte Carlo Primality Testing (Miller-Rabin)" << endl;
+            print_monte_carlo_primality_steps();
+            continue;
+        }
 
-            cout << "\n========== Running " << k << " Iterations ==========" << endl;
+        // choice == "2" – run comparison
+        int k;
+        cout << "Enter number of test numbers to generate (k): ";
+        string k_input;
+        getline(cin, k_input);
+        while (!is_valid_positive_integer(k_input) || stoll(k_input) > 1000000) {
+            cout << "Invalid input. Enter a positive integer (1 - 1,000,000): ";
+            getline(cin, k_input);
+        }
+        k = stoi(k_input);
 
-            // Quick Sort Comparison
-            cout << "\n--- Quick Sort (Randomized) ---" << endl;
-            long long total_quicksort_time = 0;
-            string filtered = normalize_string(test_input, false);
-            if (!filtered.empty()) {
-                for (int i = 0; i < k; i++) {
-                    auto start = high_resolution_clock::now();
-                    string sorted = random_quick_sort(filtered);
-                    auto stop = high_resolution_clock::now();
-                    auto duration = duration_cast<microseconds>(stop - start);
-                    total_quicksort_time += duration.count();
+        cout << "Enter range for random numbers (e.g., 100-10000): ";
+        string range_input;
+        getline(cin, range_input);
+
+        long long min_range = 100, max_range = 10000;
+        bool valid_range = false;
+
+        while (!valid_range) {
+            size_t dash_pos = range_input.find('-');
+            if (dash_pos != string::npos && dash_pos != 0 && dash_pos != range_input.length() - 1) {
+                try {
+                    string min_str = range_input.substr(0, dash_pos);
+                    string max_str = range_input.substr(dash_pos + 1);
+                    if (is_valid_positive_integer(min_str) && is_valid_positive_integer(max_str)) {
+                        min_range = stoll(min_str);
+                        max_range = stoll(max_str);
+                        if (min_range >= 2 && max_range > min_range && max_range - min_range <= 10000000) {
+                            valid_range = true;
+                        }
+                        else {
+                            cout << "Min must be >= 2, max must be > min, and range width <= 10 million. Try again: ";
+                            getline(cin, range_input);
+                        }
+                    }
+                    else {
+                        cout << "Invalid format. Use positive integers like 100-10000: ";
+                        getline(cin, range_input);
+                    }
                 }
-                long long avg_quicksort = total_quicksort_time / k;
-                cout << "Total time for " << k << " iterations: " << total_quicksort_time << " microseconds" << endl;
-                cout << "Average time per iteration: " << avg_quicksort << " microseconds" << endl;
-            } else {
-                cout << "No valid characters to sort." << endl;
-            }
-
-            // Rabin-Karp Comparison
-            cout << "\n--- Rabin-Karp (String Matching) ---" << endl;
-            cout << "Enter pattern to search for: ";
-            string pattern;
-            getline(cin, pattern);
-            while (pattern.empty()) {
-                cout << "Pattern cannot be empty. Please try again: ";
-                getline(cin, pattern);
-            }
-
-            long long total_rk_time = 0;
-            string filtered_text = normalize_string_rk(test_input, false);
-            string filtered_pattern = normalize_string_rk(pattern, false);
-
-            if (!filtered_pattern.empty() && !filtered_text.empty()) {
-                for (int i = 0; i < k; i++) {
-                    auto start = high_resolution_clock::now();
-                    vector<int> matches = rabin_karp_search(filtered_text, filtered_pattern);
-                    auto stop = high_resolution_clock::now();
-                    auto duration = duration_cast<microseconds>(stop - start);
-                    total_rk_time += duration.count();
+                catch (...) {
+                    cout << "Invalid format. Use format like 100-10000: ";
+                    getline(cin, range_input);
                 }
-                long long avg_rk = total_rk_time / k;
-                cout << "Total time for " << k << " iterations: " << total_rk_time << " microseconds" << endl;
-                cout << "Average time per iteration: " << avg_rk << " microseconds" << endl;
-            } else {
-                cout << "No valid characters to search." << endl;
             }
-
-            // Comparison Summary
-            if (!filtered.empty() && !filtered_pattern.empty() && !filtered_text.empty()) {
-                cout << "\n========== Summary ==========" << endl;
-                long long avg_quicksort = total_quicksort_time / k;
-                long long avg_rk = total_rk_time / k;
-                cout << "Quick Sort Average: " << avg_quicksort << " microseconds" << endl;
-                cout << "Rabin-Karp Average: " << avg_rk << " microseconds" << endl;
-                if (avg_quicksort < avg_rk) {
-                    cout << "Quick Sort is faster by " << (avg_rk - avg_quicksort) << " microseconds" << endl;
-                } else {
-                    cout << "Rabin-Karp is faster by " << (avg_quicksort - avg_rk) << " microseconds" << endl;
-                }
-                cout << "=============================" << endl;
+            else {
+                cout << "Invalid format. Use format like 100-10000: ";
+                getline(cin, range_input);
             }
+        }
 
-            cout << "\nWould you like to run another comparison? (y/n): ";
-            string again;
+        uniform_int_distribution<long long> dis(min_range, max_range);
+        vector<long long> test_numbers(k);
+        for (int i = 0; i < k; i++) {
+            test_numbers[i] = dis(gen);
+        }
+
+        cout << "\nRunning " << k << " Tests" << endl;
+        cout << "Testing numbers: ";
+        for (int i = 0; i < k; i++) {
+            cout << test_numbers[i];
+            if (i < k - 1) cout << ", ";
+        }
+        cout << endl;
+
+        cout << "\nLas Vegas Primality Testing" << endl;
+        long long total_lv_time = 0;
+        int lv_primes = 0;
+        for (int i = 0; i < k; i++) {
+            long long n = test_numbers[i];
+            auto start = high_resolution_clock::now();
+            bool is_prime = las_vegas_primality(n);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            total_lv_time += duration.count();
+            if (is_prime) lv_primes++;
+        }
+        long long avg_lv = total_lv_time / k;
+        cout << "Total time for " << k << " tests: " << total_lv_time << " microseconds" << endl;
+        cout << "Average time per test: " << avg_lv << " microseconds" << endl;
+        cout << "Primes found: " << lv_primes << endl;
+
+        cout << "\nMonte Carlo Primality Testing" << endl;
+        long long total_mc_time = 0;
+        int mc_primes = 0;
+        for (int i = 0; i < k; i++) {
+            long long n = test_numbers[i];
+            auto start = high_resolution_clock::now();
+            bool is_prime = monte_carlo_primality(n, 20);
+            auto stop = high_resolution_clock::now();
+            auto duration = duration_cast<microseconds>(stop - start);
+            total_mc_time += duration.count();
+            if (is_prime) mc_primes++;
+        }
+        long long avg_mc = total_mc_time / k;
+        cout << "Total time for " << k << " tests: " << total_mc_time << " microseconds" << endl;
+        cout << "Average time per test: " << avg_mc << " microseconds" << endl;
+        cout << "Primes found: " << mc_primes << endl;
+
+        cout << "\nSummary" << endl;
+        cout << "Las Vegas Average:      " << avg_lv << " microseconds" << endl;
+        cout << "Monte Carlo Average:    " << avg_mc << " microseconds" << endl;
+        cout << "Las Vegas Primes Found: " << lv_primes << endl;
+        cout << "Monte Carlo Primes Found: " << mc_primes << endl;
+        if (lv_primes == mc_primes) {
+            cout << "Both algorithms agree on prime count." << endl;
+        }
+        else {
+            cout << "WARNING: Algorithms disagree on prime count!" << endl;
+        }
+        if (avg_lv < avg_mc) {
+            cout << "Las Vegas is faster by " << (avg_mc - avg_lv) << " microseconds" << endl;
+        }
+        else {
+            cout << "Monte Carlo is faster by " << (avg_lv - avg_mc) << " microseconds" << endl;
+        }
+
+        cout << "\nWould you like to run another comparison? (y/n): ";
+        string again;
+        getline(cin, again);
+        while (!again.empty() && tolower(again[0]) != 'y' && tolower(again[0]) != 'n') {
+            cout << "Invalid input. Enter y or n: ";
             getline(cin, again);
-            if (again.empty() || tolower(again[0]) != 'y') {
-                break;
-            }
+        }
+        if (again.empty() || tolower(again[0]) != 'y') {
+            break;
         }
     }
 }
