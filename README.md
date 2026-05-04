@@ -94,4 +94,4 @@ Enter how many numbers to test and a range (e.g. `100-10000`). Both algorithms r
 
 ## AI Usage Disclosure
 
-AI was used to assist in generating function definition comments and parameter descriptions throughout the source files. All algorithm logic, structure, and design decisions were written by the me.
+AI was used to assist in generating function definition comments and parameter descriptions throughout the source files.
