@@ -17,7 +17,7 @@ The program implements four algorithms across these two categories:
 | Algorithm | Category | Purpose |
 |---|---|---|
 | Random Quick Sort | Las Vegas | Sorts a string using a randomized pivot |
-| Miller-Rabin Primality (Las Vegas) | Las Vegas | Tests if a number is prime, always correct |
+| Miller-Rabin Primality (Las Vegas) | Las Vegas | Tests if a number is prime against random numbers, always correct |
 | Rabin-Karp String Matching | Monte Carlo | Searches for a pattern inside a string using rolling hash |
 | Miller-Rabin Primality (Monte Carlo) | Monte Carlo | Tests if a number is prime with bounded error probability |
 
